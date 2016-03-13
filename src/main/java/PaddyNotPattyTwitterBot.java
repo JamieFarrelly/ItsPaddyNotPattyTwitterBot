@@ -9,10 +9,14 @@ import twitter4j.TwitterFactory;
 
 public class PaddyNotPattyTwitterBot {
 
-    private static final long TEN_MINUTES_IN_MILLIS = 600000;
-    private static long LAST_TWEET_ID_REPLIED_TO = 0000000000000000001l;
+    /*
+     * Staying under 100 tweets an hour limit, and 1,000 tweets a day limit
+     * Every 2 and a half hours we'll send max 100 tweets
+     */
+    private static final long ONE_HUNDRED_FIFTY_MINS_IN_MILLIS = 9000000;
+    private static Long LAST_TWEET_ID_REPLIED_TO = null;
     private static final String KEYWORD_SCANNING_FOR = "St. Patty";
-    private static String[] startOfTweetOptions = { "Hey dude,", "Sorry but", "Believe it or not,", "Actually," };
+    private static String[] startOfTweetOptions = { "Hey,", "Hey dude,", "Sorry but", "Believe it or not,", "Actually,", "Correction," };
 
     public static void main(String... args) {
         paddyNotPatty();
@@ -26,7 +30,12 @@ public class PaddyNotPattyTwitterBot {
         while (true) {
             // create a new search
             Query query = new Query(KEYWORD_SCANNING_FOR);
-            query.setSinceId(LAST_TWEET_ID_REPLIED_TO);
+            query.setCount(100);
+            
+            // first time running the bot, we don't have the last tweet replied to
+            if (LAST_TWEET_ID_REPLIED_TO != null) {
+                query.setSinceId(LAST_TWEET_ID_REPLIED_TO);
+            }
 
             try {
                 // get the results from that search
@@ -52,7 +61,7 @@ public class PaddyNotPattyTwitterBot {
             }
 
             try {
-                Thread.sleep(TEN_MINUTES_IN_MILLIS);
+                Thread.sleep(ONE_HUNDRED_FIFTY_MINS_IN_MILLIS);
             } catch (InterruptedException ie) {
                 ie.printStackTrace();
             }
@@ -64,7 +73,8 @@ public class PaddyNotPattyTwitterBot {
         int randomIndex = new Random().nextInt(startOfTweetOptions.length);
         String startOfTweet = (startOfTweetOptions[randomIndex]);
 
-        String tweetToBeSent = "@" + userNameBeingRepliedTo + startOfTweet + " it's Paddy not Patty";
+        String tweetToBeSent = "@" + userNameBeingRepliedTo + " " + startOfTweet + " it's Paddy not Patty." + 
+                                " Patty is a burger, Paddy is a person.";
         return tweetToBeSent;
     }
 
