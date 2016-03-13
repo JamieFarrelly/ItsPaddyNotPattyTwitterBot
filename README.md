@@ -1,4 +1,4 @@
-# Its Paddy Not Patty Twitter Bot
+# It's Paddy Not Patty Twitter Bot
 
 *Correcting people one tweet at a time, because there's a difference between a burger and a person.*
 
