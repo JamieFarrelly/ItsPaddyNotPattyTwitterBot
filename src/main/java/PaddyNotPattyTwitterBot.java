@@ -10,10 +10,10 @@ import twitter4j.TwitterFactory;
 public class PaddyNotPattyTwitterBot {
 
     /*
-     * Staying under 100 tweets an hour limit, and 1,000 tweets a day limit
-     * Every 2 and a half hours we'll send max 100 tweets
+     * Only sending 10 tweets every 30 minutes, not going over 
+     * Twitter limits of 100 tweets an hour / 1,000 per day
      */
-    private static final long ONE_HUNDRED_FIFTY_MINS_IN_MILLIS = 9000000;
+    private static final long THIRTY_MINS_IN_MILLIS = 1800000;
     private static Long LAST_TWEET_ID_REPLIED_TO = null;
     private static final String KEYWORD_SCANNING_FOR = "St. Patty";
     private static String[] startOfTweetOptions = { "Hey,", "Hey dude,", "Sorry but", "Believe it or not,", "Actually,", "Correction," };
@@ -30,7 +30,7 @@ public class PaddyNotPattyTwitterBot {
         while (true) {
             // create a new search
             Query query = new Query(KEYWORD_SCANNING_FOR);
-            query.setCount(100);
+            query.setCount(10);
             
             // first time running the bot, we don't have the last tweet replied to
             if (LAST_TWEET_ID_REPLIED_TO != null) {
@@ -61,7 +61,7 @@ public class PaddyNotPattyTwitterBot {
             }
 
             try {
-                Thread.sleep(ONE_HUNDRED_FIFTY_MINS_IN_MILLIS);
+                Thread.sleep(THIRTY_MINS_IN_MILLIS);
             } catch (InterruptedException ie) {
                 ie.printStackTrace();
             }
